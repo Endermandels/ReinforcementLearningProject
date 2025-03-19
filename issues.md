@@ -3,6 +3,7 @@
 # Open
 
 1. Create game loop
+2. Allow user to quit from game loop
 
 # Backlog
 
