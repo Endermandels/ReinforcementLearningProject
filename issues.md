@@ -2,16 +2,19 @@
 
 # Open
 
-# Backlog
+1. Create game loop
 
+# Backlog
 
 ## Class Structure
 * Model
     - Contains current game state
     - Contains game loop
     - Pygame agnostic (should not require pygame)
+    - Log current game state from a given action (optional)
 * View
-    - Display game using pygame
+    - Display game
+    - Choose either to display using terminal or pygame
     - Make window scalable (optional)
 * Controller
     - Handle user input
