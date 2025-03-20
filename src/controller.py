@@ -1,18 +1,4 @@
-class bcolors:
-    """ Text colors """
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-def warn(string: str):
-    """ Print a warning string """
-    print(f"{bcolors.WARNING}{string}{bcolors.ENDC}")
+from toolbox import warn
 
 class Controller:
     """ Handles user inputs (either gui or terminal) """
@@ -23,8 +9,7 @@ class Controller:
     def _update_pygame(self):
         pass
     
-    
-    def _terminal_input(self):
+    def _handle_terminal_input(self):
         # Parse user input
         user_input = input("What would you like to do?\n"
             "  1) quit\n"
@@ -42,7 +27,7 @@ class Controller:
             warn(f"* Unknown option {user_input}; input a valid number")
     
     def _update_terminal(self):
-        self._terminal_input()
+        self._handle_terminal_input()
     
     def update(self):
         if self.pygame_view:
