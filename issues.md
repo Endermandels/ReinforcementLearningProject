@@ -1,9 +1,11 @@
 # Closed
 
-# Open
-
 1. Create game loop
 2. Allow user to quit from game loop
+
+# Open
+
+3. Create state representation
 
 # Backlog
 
@@ -18,7 +20,7 @@
     - Choose either to display using terminal or pygame
     - Make window scalable (optional)
 * Controller
-    - Handle user input
+    - Handle user input from terminal
     - Handle user input from pygame gui (optional)
 * AgentSensors
     - Ferry information from the model to the agent
