@@ -2,10 +2,11 @@
 
 1. Create game loop
 2. Allow user to quit from game loop
+3. Create state representation
 
 # Open
 
-3. Create state representation
+4. Create Agent
 
 # Backlog
 

@@ -15,6 +15,9 @@ class View:
                 if tile.is_obstacle:
                     string += bcolors.YELLOW
                     string += " # "  # Obstacle
+                elif tile.has_robot:
+                    string += bcolors.CYAN
+                    string += " @ "
                 elif tile.reward:
                     if tile.reward > 0:
                         string += bcolors.GREEN
