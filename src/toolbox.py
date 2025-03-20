@@ -16,4 +16,4 @@ def cprint(string: str, col: bcolors = bcolors.ENDC):
 
 def warn(string: str):
     """ Print a warning string """
-    print(f"{bcolors.YELLOW}{string}{bcolors.ENDC}")
+    print(f"{bcolors.BOLD}{bcolors.YELLOW}{string}{bcolors.ENDC}")
