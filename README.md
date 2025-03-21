@@ -22,9 +22,9 @@ Below is a description of what each colored character represents:
     cyan '@' - Robot
     white '.' - Robot can move through this space
     yellow '#' - Robot cannot move through this space
+    green '$' - Energy space (positive reward)
+    red '!' - Troll space (negative reward)
     bold - Terminal space
-    green number - Positive reward
-    red number - negative reward
 
 ## Pygame View
 
