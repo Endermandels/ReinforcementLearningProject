@@ -37,6 +37,8 @@ Below is a description of what each colored character represents:
     red '!' - Troll space (negative reward)
     bold - Terminal space
 
+On reaching a terminal state, the game stats will be displayed.
+
 ## Pygame
 
 TODO

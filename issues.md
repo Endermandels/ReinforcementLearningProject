@@ -5,10 +5,11 @@
 3. Create state representation
 4. Create Agent
 5. Simulate agent playing the game
+6. Show statistics
 
 # Open
 
-6. Show statistics
+7. Create pygame view and controller
 
 # Backlog
 
