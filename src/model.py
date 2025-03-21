@@ -115,9 +115,9 @@ class State:
         return new_x, new_y
         
     def handle_action(self, action: Action) -> State:
-        """ Process the given action; Return the state to transition to """
+        """ Process the given action; Returns the new state or the same state on an illegal action """
         if self._illegal_action(action):
-            return State(grid=self.grid, robot_pos=self.robot_pos)
+            return self
         new_grid = self._copy_grid(self.grid)
         new_pos = self._move_robot(new_grid, action)
         return State(grid=new_grid, robot_pos=new_pos)
@@ -135,15 +135,37 @@ class Model:
         self.agent_controller = ag_ctrl.AgentController()
         self.agent = ag.Agent(self.agent_controller)
         self.agent_sensors = ag_ss.AgentSensors(self.agent)
-        self.simulating_game = False # Whether the agent simulation is in progress
+        
+        self.simulating_game: bool = False # Whether the agent simulation is in progress
+        self.num_iterations: int  = 0 # Number of iterations (includes illegal actions)
+        self.num_actions: int = 0 # Number of successful actions
+        self.final_reward: int = 0
+
+    def _print_stats(self):
+        print(f"- iterations: {self.num_iterations}")
+        print(f"- actions: {self.num_actions}")
+        print(f"- actions / iterations: {self.num_actions / self.num_iterations}")
+        print(f"- final reward: {self.final_reward}")
+        print("\n---------\n")
+
+    def _step_agent(self):
+        """ Allow agent to make an action """
+        self.agent_sensors.send_observations(self.cur_state)
+        prev_state = self.cur_state
+        self.cur_state = self.cur_state.handle_action(self.agent_controller.get_action())
+        if prev_state != self.cur_state:
+            self.num_actions += 1
+        self.num_iterations += 1
+        if self.cur_state.is_terminal():
+            self._print_stats()
+            self.simulating_game = False
 
     def _handle_inputs(self):
         if self.controller.should_step():
             if self.cur_state.is_terminal():
                 warn("* Current state is terminal; please reset game")
                 return
-            self.agent_sensors.send_observations(self.cur_state)
-            self.cur_state = self.cur_state.handle_action(self.agent_controller.get_action())
+            self._step_agent()
         elif self.controller.should_reset_game():
             self.cur_state = State()
         elif self.controller.should_simulate_game():
@@ -152,19 +174,13 @@ class Model:
                 return
             self.simulating_game = True
 
-    def _simulate_game(self):
-        self.agent_sensors.send_observations(self.cur_state)
-        self.cur_state = self.cur_state.handle_action(self.agent_controller.get_action())
-        if self.cur_state.is_terminal():
-            self.simulating_game = False
-
     def _update(self):
         self.view.update(self.cur_state)
         if not self.simulating_game:
             self.controller.update()
             self._handle_inputs()
         else:
-            self._simulate_game()
+            self._step_agent()
 
     def run(self):
         """ Run the game loop """
