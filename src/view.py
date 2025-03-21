@@ -1,4 +1,4 @@
-from toolbox import cprint, bcolors
+from toolbox import BColors
 import model as mdl
 
 class View:
@@ -10,23 +10,19 @@ class View:
         for row in grid:
             for tile in row:
                 if tile.is_terminal:
-                    string += bcolors.BOLD
+                    string += BColors.BOLD
                     
-                if tile.is_obstacle:
-                    string += bcolors.YELLOW
-                    string += " # "  # Obstacle
-                elif tile.has_robot:
-                    string += bcolors.CYAN
-                    string += " @ "
-                elif tile.reward:
-                    if tile.reward > 0:
-                        string += bcolors.GREEN
-                    else:
-                        string += bcolors.RED
-                    string += f" {tile.reward:+} "  # Show terminal rewards (+1, -1)
-                else:
-                    string += " . "  # Normal tile
-                string += bcolors.ENDC
+                if tile.is_obstacle():
+                    string += BColors.YELLOW
+                elif tile.has_robot():
+                    string += BColors.CYAN
+                elif tile.reward > 0:
+                    string += BColors.GREEN
+                elif tile.reward < 0:
+                    string += BColors.RED
+                    
+                string += f" {tile.occupying} "
+                string += BColors.ENDC
             string += "\n"
         print(string)
         

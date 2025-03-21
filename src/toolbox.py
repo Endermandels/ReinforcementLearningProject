@@ -1,4 +1,4 @@
-class bcolors:
+class BColors:
     """ Text colors """
     BLUE = '\033[94m'
     CYAN = '\033[96m'
@@ -10,10 +10,10 @@ class bcolors:
     HEADER = '\033[95m'
     ENDC = '\033[0m'
 
-def cprint(string: str, col: bcolors = bcolors.ENDC):
+def cprint(string: str, col: BColors = BColors.ENDC):
     """ Print string with specified color """
-    print(f"{col}{string}{bcolors.ENDC}")
+    print(f"{col}{string}{BColors.ENDC}")
 
 def warn(string: str):
     """ Print a warning string """
-    print(f"{bcolors.BOLD}{bcolors.YELLOW}{string}{bcolors.ENDC}")
+    print(f"{BColors.BOLD}{BColors.YELLOW}{string}{BColors.ENDC}")
