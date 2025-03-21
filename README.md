@@ -14,7 +14,18 @@ Run the model.py file:
 
 TODO: Add arguments to run in terminal or with pygame
 
-## Terminal View
+## Terminal
+
+### Terminal Controls
+
+All terminal controls are listed after running model.py:
+
+    1. quit - Quit the program
+    2. reset game - Reset the game state to the default state
+    3. step through next agent action - Allow the agent to make one action
+    4. simulate agent playing - Allow the agent to make actions until a terminal state is reached
+
+### Terminal View
 
 Each grid tile is represented by colored characters.
 Below is a description of what each colored character represents:
@@ -26,6 +37,6 @@ Below is a description of what each colored character represents:
     red '!' - Troll space (negative reward)
     bold - Terminal space
 
-## Pygame View
+## Pygame
 
 TODO

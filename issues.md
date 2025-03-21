@@ -4,10 +4,11 @@
 2. Allow user to quit from game loop
 3. Create state representation
 4. Create Agent
+5. Simulate agent playing the game
 
 # Open
 
-5. Simulate agent playing the game
+6. Show statistics
 
 # Backlog
 
