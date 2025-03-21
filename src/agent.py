@@ -14,7 +14,7 @@ class Agent:
         # TODO: Make this smarter
         self.move_up = 2
         self.move_right = 3
-
+    
     def observe(self, observations):
         """ Receive observations from agent sensors """
         self._compute_action()

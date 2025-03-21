@@ -124,7 +124,7 @@ class State:
     
     def is_terminal(self) -> bool:
         """ Returns whether this state is a terminal state """
-        return self.grid[self.robot_pos[1]][self.robot_pos[0]].is_terminal()
+        return self.grid[self.robot_pos[1]][self.robot_pos[0]].is_terminal
 
 class Model:
     """ Keeps track of the current game state and runs the main loop """
@@ -135,13 +135,36 @@ class Model:
         self.agent_controller = ag_ctrl.AgentController()
         self.agent = ag.Agent(self.agent_controller)
         self.agent_sensors = ag_ss.AgentSensors(self.agent)
+        self.simulating_game = False # Whether the agent simulation is in progress
 
-    def _update(self):
+    def _handle_inputs(self):
         if self.controller.should_step():
+            if self.cur_state.is_terminal():
+                warn("* Current state is terminal; please reset game")
+                return
             self.agent_sensors.send_observations(self.cur_state)
             self.cur_state = self.cur_state.handle_action(self.agent_controller.get_action())
+        elif self.controller.should_reset_game():
+            self.cur_state = State()
+        elif self.controller.should_simulate_game():
+            if self.cur_state.is_terminal():
+                warn("* Current state is terminal; please reset game")
+                return
+            self.simulating_game = True
+
+    def _simulate_game(self):
+        self.agent_sensors.send_observations(self.cur_state)
+        self.cur_state = self.cur_state.handle_action(self.agent_controller.get_action())
+        if self.cur_state.is_terminal():
+            self.simulating_game = False
+
+    def _update(self):
         self.view.update(self.cur_state)
-        self.controller.update()
+        if not self.simulating_game:
+            self.controller.update()
+            self._handle_inputs()
+        else:
+            self._simulate_game()
 
     def run(self):
         """ Run the game loop """
