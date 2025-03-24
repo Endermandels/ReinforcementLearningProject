@@ -11,29 +11,26 @@ class Agent:
     def __init__(self, controller: AgentController):
         self.controller = controller
         
-        # TODO: Make this smarter
-        self.move_up = 2
-        self.move_right = 3
-    
     def observe(self, observations):
         """ Receive observations from agent sensors """
         self._compute_action()
 
     def _compute_action(self):
         """ Compute optimal action """
-        # TODO: Make this smarter
-        action = choice([mdl.Action.UP,
-                         mdl.Action.DOWN,
-                         mdl.Action.LEFT,
-                         mdl.Action.RIGHT,])
-        if self.move_up:
-            self.move_up -= 1
-            action = mdl.Action.UP
-        elif self.move_right:
-            self.move_right -= 1
-            action = mdl.Action.RIGHT
-        self._act(action)
+        self._act(mdl.Action.UP)
 
     def _act(self, action: mdl.Action):
         """ Send action to agent controller """
         self.controller.receive_action(action)
+
+class RandomAgent(Agent):
+    def __init__(self, controller: AgentController):
+        super().__init__(controller)
+        
+    def _compute_action(self):
+        """ Compute optimal action """
+        action: mdl.Action = choice([mdl.Action.UP,
+                         mdl.Action.DOWN,
+                         mdl.Action.LEFT,
+                         mdl.Action.RIGHT,])
+        self._act(action)

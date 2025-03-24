@@ -128,13 +128,14 @@ class State:
 
 class Model:
     """ Keeps track of the current game state and runs the main loop """
-    def __init__(self):
+    def __init__(self, agent: ag.Agent, agent_controller: ag_ctrl.AgentController, 
+                 agent_sensors: ag_ss.AgentSensors):
         self.controller = ctrl.Controller()
         self.view = vw.View()
         self.cur_state = State()
-        self.agent_controller = ag_ctrl.AgentController()
-        self.agent = ag.Agent(self.agent_controller)
-        self.agent_sensors = ag_ss.AgentSensors(self.agent)
+        self.agent = agent
+        self.agent_controller = agent_controller
+        self.agent_sensors = agent_sensors
         
         self.simulating_game: bool = False # Whether the agent simulation is in progress
         self.num_iterations: int  = 0 # Number of iterations (includes illegal actions)
@@ -188,7 +189,10 @@ class Model:
             self._update()
 
 def main():
-    model = Model()
+    agent_controller = ag_ctrl.AgentController()
+    agent = ag.RandomAgent(agent_controller)
+    agent_sensors = ag_ss.AgentSensors(agent)
+    model = Model(agent, agent_controller, agent_sensors)
     model.run()
 
 if __name__ == "__main__":
