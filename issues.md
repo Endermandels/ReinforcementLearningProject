@@ -6,15 +6,14 @@
 4. Create Agent
 5. Simulate agent playing the game
 6. Show statistics
+7. Specify Agent controller during initialization
+8. Make Tile and State class immutable
 
 # Open
 
-7. Specify Agent controller during initialization
-8. Make Tile class immutable
 
 # Backlog
 
-- State class immutable?
 - Create pygame view and controller
 
 ## Class Structure
