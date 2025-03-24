@@ -9,9 +9,13 @@
 
 # Open
 
-7. Create pygame view and controller
+7. Specify Agent controller during initialization
+8. Make Tile class immutable
 
 # Backlog
+
+- State class immutable?
+- Create pygame view and controller
 
 ## Class Structure
 * Model
