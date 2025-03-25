@@ -8,10 +8,11 @@
 6. Show statistics
 7. Specify Agent controller during initialization
 8. Make Tile and State class immutable
+9. Create pygame view and controller
 
 # Open
 
-9. Create pygame view and controller
+10. Create resizable grid
 
 # Backlog
 
