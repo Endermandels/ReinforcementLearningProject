@@ -6,14 +6,16 @@ import view as vw
 import agent_controller as ag_ctrl
 import agent as ag
 import agent_sensors as ag_ss
+import argparse
 
 
 class Model:
     """ Keeps track of the current game state and runs the main loop """
     def __init__(self, agent: ag.Agent, agent_controller: ag_ctrl.AgentController, 
-                 agent_sensors: ag_ss.AgentSensors, default_state: State):
-        self.controller = ctrl.Controller()
-        self.view = vw.View()
+                 agent_sensors: ag_ss.AgentSensors, default_state: State,
+                 view: vw.View, controller: ctrl.Controller):
+        self.view = view
+        self.controller = controller
         self.default_state = default_state
         self.cur_state = default_state
         self.agent = agent
@@ -94,10 +96,17 @@ TEST_GRID = [
 ]
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--pygame", action="store_true")
+    args = parser.parse_args()
+    
     agent_controller = ag_ctrl.AgentController()
     agent = ag.RandomAgent(agent_controller)
     agent_sensors = ag_ss.AgentSensors(agent)
-    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID))
+    view = vw.View(args.pygame)
+    controller = ctrl.Controller(args.pygame)
+    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
+                  view, controller)
     model.run()
 
 if __name__ == "__main__":

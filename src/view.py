@@ -1,9 +1,29 @@
-from toolbox import BColors
+from toolbox import BColors, warn
 from state import *
+
+PYGAME = False
+
+try:
+    import pygame
+    PYGAME = True
+except ImportError as e:
+    warn(f"* {e}")
 
 class View:
     def __init__(self, pygame_view: bool = False):
         self.pygame_view = pygame_view # Whether to display pygame graphics or print to terminal
+        if not PYGAME:
+            warn("* Setting pygame_view to false because Pygame is not imported")
+            self.pygame_view = False
+        if self.pygame_view:
+            self._pygame_init()
+    
+    def _pygame_init(self):
+        pygame.init()
+        self.WIDTH = 1080
+        self.HEIGHT = 720
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.clock = pygame.time.Clock()
     
     def _print_grid(self, grid: list[list[Tile]]):
         string = ""
@@ -33,7 +53,10 @@ class View:
         self._print_state(cur_state)
         
     def _pygame_update(self, cur_state: State):
-        pass
+        pygame.display.flip()
+        self.clock.tick(60)
+        self.screen.fill((0, 0, 0))
+        pygame.display.set_caption("Reinforcement Learning Project")
     
     def update(self, cur_state: State):
         if self.pygame_view:

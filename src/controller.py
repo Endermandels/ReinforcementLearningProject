@@ -1,16 +1,35 @@
 from toolbox import warn
 
+PYGAME = False
+
+try:
+    import pygame
+    PYGAME = True
+except ImportError as e:
+    warn(f"* {e}")
+
+
 class Controller:
     """ Handles user inputs (either gui or terminal) """
     def __init__(self, pygame_view: bool = False):
         self.pygame_view = pygame_view # Whether to use pygame for display or the terminal
+        if not PYGAME:
+            warn("* Setting pygame_view to false because Pygame is not imported")
+            self.pygame_view = False
         self.quit_input = False # Whether to quit the program
         self.step_input = False # Whether to step through the next agent action
         self.reset_game = False # Whether to reset the game state
         self.simulate_game = False # Whether to simulate a game from current state to terminal state
 
+    def _handle_pygame_input(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.quit_input = True
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.quit_input = True
+        
     def _update_pygame(self):
-        pass
+        self._handle_pygame_input()
     
     def _handle_terminal_input(self):
         # Parse user input
