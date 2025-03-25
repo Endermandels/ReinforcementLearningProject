@@ -23,11 +23,14 @@ class View:
         self.WIDTH = 1080
         self.HEIGHT = 720
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("Reinforcement Learning Project")
+        self.TITLE = "Reinforcement Learning Project"
+        pygame.display.set_caption(self.TITLE)
         self.clock = pygame.time.Clock()
         
         self.GRID_CELL_SIZE = 40
-        self.font_small = pygame.font.SysFont("comicsans", 24)
+        FONT_NAME = "comicsans"
+        self.font_small = pygame.font.SysFont(FONT_NAME, 24)
+        self.font_large = pygame.font.SysFont(FONT_NAME, 36)
     
     def _print_grid(self, grid: list[list[Tile]]):
         string = ""
@@ -61,7 +64,7 @@ class View:
         if not self.pygame_view:
             return
         lines = instructions.split('\n')
-        y_offset = 30
+        y_offset = 80
         for line in lines:
             text = self.font_small.render(line, True, (255, 255, 255))
             self.screen.blit(text, (50, y_offset))
@@ -92,7 +95,13 @@ class View:
                 self._draw_tile(tile, rect)
                 pygame.draw.rect(self.screen, (100, 75, 0), rect, 1)  # border
     
+    def _draw_title(self):
+        text = self.font_large.render(self.TITLE, True, (255, 255, 255))
+        text_rect = text.get_rect(midtop=(self.WIDTH/2, 30))
+        self.screen.blit(text, text_rect)
+    
     def _draw(self, state: State):
+        self._draw_title()
         self._draw_grid(state.grid)
     
     def _pygame_update(self, cur_state: State):
