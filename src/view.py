@@ -23,7 +23,10 @@ class View:
         self.WIDTH = 1080
         self.HEIGHT = 720
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        pygame.display.set_caption("Reinforcement Learning Project")
         self.clock = pygame.time.Clock()
+        
+        self.GRID_CELL_SIZE = 40
     
     def _print_grid(self, grid: list[list[Tile]]):
         string = ""
@@ -51,12 +54,28 @@ class View:
     
     def _terminal_update(self, cur_state: State):
         self._print_state(cur_state)
+    
+    def _draw_grid(self, grid: list[list[Tile]]):
+        """ Dynamically draw grid """
+        x_offset = self.WIDTH / 2 - (self.GRID_CELL_SIZE*len(grid[0])) / 2
+        y_offset = self.HEIGHT / 2 - (self.GRID_CELL_SIZE*len(grid)) / 2
         
+        for y, row in enumerate(grid):
+            for x, tile in enumerate(row):
+                rect = pygame.Rect(x_offset + x * self.GRID_CELL_SIZE,
+                                   y_offset + y * self.GRID_CELL_SIZE,
+                                   self.GRID_CELL_SIZE, self.GRID_CELL_SIZE)
+                pygame.draw.rect(self.screen, (25, 0, 50), rect)
+                pygame.draw.rect(self.screen, (100, 0, 0), rect, 1)  # border
+    
+    def _draw(self, state: State):
+        self._draw_grid(state.grid)
+    
     def _pygame_update(self, cur_state: State):
+        self._draw(cur_state)
         pygame.display.flip()
         self.clock.tick(60)
         self.screen.fill((0, 0, 0))
-        pygame.display.set_caption("Reinforcement Learning Project")
     
     def update(self, cur_state: State):
         if self.pygame_view:

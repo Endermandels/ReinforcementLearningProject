@@ -92,7 +92,7 @@ TEST_GRID = [
         Tile(), 
         Tile(), 
         Tile()
-    ]
+    ],
 ]
 
 def main():
