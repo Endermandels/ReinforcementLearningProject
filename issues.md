@@ -11,10 +11,10 @@
 
 # Open
 
+9. Create pygame view and controller
 
 # Backlog
 
-- Create pygame view and controller
 
 ## Class Structure
 * Model
