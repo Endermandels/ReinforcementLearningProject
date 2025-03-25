@@ -55,6 +55,18 @@ class View:
     def _terminal_update(self, cur_state: State):
         self._print_state(cur_state)
     
+    def _draw_tile(self, tile: Tile, rect: pygame.Rect):
+        if tile.occupying == TileSpace.OPEN:
+            pygame.draw.rect(self.screen, (25, 0, 50), rect)
+        elif tile.occupying == TileSpace.OBSTACLE:
+            pygame.draw.rect(self.screen, (200, 200, 0), rect)
+        elif tile.occupying == TileSpace.ENERGY:
+            pygame.draw.rect(self.screen, (0, 200, 0), rect)
+        elif tile.occupying == TileSpace.TROLL:
+            pygame.draw.rect(self.screen, (200, 0, 0), rect)
+        elif tile.occupying == TileSpace.ROBOT:
+            pygame.draw.rect(self.screen, (0, 200, 200), rect)
+    
     def _draw_grid(self, grid: list[list[Tile]]):
         """ Dynamically draw grid """
         x_offset = self.WIDTH / 2 - (self.GRID_CELL_SIZE*len(grid[0])) / 2
@@ -65,8 +77,8 @@ class View:
                 rect = pygame.Rect(x_offset + x * self.GRID_CELL_SIZE,
                                    y_offset + y * self.GRID_CELL_SIZE,
                                    self.GRID_CELL_SIZE, self.GRID_CELL_SIZE)
-                pygame.draw.rect(self.screen, (25, 0, 50), rect)
-                pygame.draw.rect(self.screen, (100, 0, 0), rect, 1)  # border
+                self._draw_tile(tile, rect)
+                pygame.draw.rect(self.screen, (100, 75, 0), rect, 1)  # border
     
     def _draw(self, state: State):
         self._draw_grid(state.grid)
