@@ -20,26 +20,33 @@ class Controller:
         self.step_input = False # Whether to step through the next agent action
         self.reset_game = False # Whether to reset the game state
         self.simulate_game = False # Whether to simulate a game from current state to terminal state
+        self.INSTRUCTIONS = "What would you like to do?\n" \
+            "  1) quit\n" \
+            "  2) reset game\n" \
+            "  3) step through next agent action\n" \
+            "  4) simulate agent playing\n"
 
     def _handle_pygame_input(self):
+        """ Handle pygame events (such as key presses and quitting the game) """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit_input = True
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.quit_input = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_1:
+                    self.quit_input = True
+                if event.key == pygame.K_2:
+                    self.reset_game = True
+                if event.key == pygame.K_3:
+                    self.step_input = True
+                if event.key == pygame.K_4:
+                    self.simulate_game = True
         
     def _update_pygame(self):
         self._handle_pygame_input()
     
     def _handle_terminal_input(self):
         # Parse user input
-        user_input = input("What would you like to do?\n"
-            "  1) quit\n"
-            "  2) reset game\n"
-            "  3) step through next agent action\n"
-            "  4) simulate agent playing\n"
-            ">> "
-        )
+        user_input = input(f"{self.INSTRUCTIONS}>> ")
         if not user_input.isdigit():
             warn("* Please input a valid number")
             return

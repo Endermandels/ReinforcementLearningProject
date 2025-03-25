@@ -27,6 +27,7 @@ class View:
         self.clock = pygame.time.Clock()
         
         self.GRID_CELL_SIZE = 40
+        self.font_small = pygame.font.SysFont("comicsans", 24)
     
     def _print_grid(self, grid: list[list[Tile]]):
         string = ""
@@ -54,6 +55,17 @@ class View:
     
     def _terminal_update(self, cur_state: State):
         self._print_state(cur_state)
+    
+    def draw_instructions(self, instructions: str):
+        """ Draws the program instructions """
+        if not self.pygame_view:
+            return
+        lines = instructions.split('\n')
+        y_offset = 30
+        for line in lines:
+            text = self.font_small.render(line, True, (255, 255, 255))
+            self.screen.blit(text, (50, y_offset))
+            y_offset += 30
     
     def _draw_tile(self, tile: Tile, rect: pygame.Rect):
         if tile.occupying == TileSpace.OPEN:

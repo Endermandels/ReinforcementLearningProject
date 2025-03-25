@@ -62,6 +62,7 @@ class Model:
 
     def _update(self):
         self.view.update(self.cur_state)
+        self.view.draw_instructions(self.controller.INSTRUCTIONS)
         if not self.simulating_game:
             self.controller.update()
             self._handle_inputs()
