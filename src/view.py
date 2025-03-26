@@ -97,7 +97,12 @@ class View:
                                    y_offset + y * self.GRID_CELL_SIZE,
                                    self.GRID_CELL_SIZE, self.GRID_CELL_SIZE)
                 self._draw_tile(tile, rect)
-                pygame.draw.rect(self.screen, (100, 75, 0), rect, 1)  # border
+                
+                # border
+                if tile.is_terminal:
+                    pygame.draw.rect(self.screen, (255, 255, 255), rect, 2)
+                else:
+                    pygame.draw.rect(self.screen, (100, 75, 0), rect, 2)  
     
     def _draw(self, state: State):
         self.screen.blit(self.title_img, self.title_rect)
