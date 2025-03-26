@@ -11,10 +11,10 @@
 9. Create pygame view and controller
 10. Create resizable grid
 11. Handle pygame inputs to run the game
+12. Display stats to pygame window
 
 # Open
 
-12. Display stats to pygame window
 
 # Backlog
 
