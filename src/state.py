@@ -3,6 +3,13 @@ from toolbox import warn, error
 from typing import NamedTuple
 from enum import Enum
 
+class Stats:
+    """ Stats collected while running the model """
+    def __init__(self):
+        self.num_iterations: int  = 0 # Number of iterations (includes illegal actions)
+        self.num_actions: int = 0 # Number of successful actions
+        self.final_reward: int = 0
+
 class Action(Enum):
     """ Available actions """
     UP = (0,-1)

@@ -8,7 +8,6 @@ import agent as ag
 import agent_sensors as ag_ss
 import argparse
 
-
 class Model:
     """ Keeps track of the current game state and runs the main loop """
     def __init__(self, agent: ag.Agent, agent_controller: ag_ctrl.AgentController, 
@@ -23,16 +22,7 @@ class Model:
         self.agent_sensors = agent_sensors
         
         self.simulating_game: bool = False # Whether the agent simulation is in progress
-        self.num_iterations: int  = 0 # Number of iterations (includes illegal actions)
-        self.num_actions: int = 0 # Number of successful actions
-        self.final_reward: int = 0
-
-    def _print_stats(self):
-        print(f"- iterations: {self.num_iterations}")
-        print(f"- actions: {self.num_actions}")
-        print(f"- actions / iterations: {self.num_actions / self.num_iterations}")
-        print(f"- final reward: {self.final_reward}")
-        print("\n---------\n")
+        self.stats = Stats()
 
     def _step_agent(self):
         """ Allow agent to make an action """
@@ -40,11 +30,15 @@ class Model:
         prev_state = self.cur_state
         self.cur_state = handle_action(self.cur_state, self.agent_controller.get_action())
         if prev_state != self.cur_state:
-            self.num_actions += 1
-        self.num_iterations += 1
+            self.stats.num_actions += 1
+        self.stats.num_iterations += 1
         if is_terminal_state(self.cur_state):
-            self._print_stats()
+            self.view.print_stats(self.stats)
             self.simulating_game = False
+
+    def _reset_game(self):
+        self.cur_state = self.default_state
+        self.stats = Stats()
 
     def _handle_inputs(self):
         if self.controller.should_step():
@@ -53,7 +47,7 @@ class Model:
                 return
             self._step_agent()
         elif self.controller.should_reset_game():
-            self.cur_state = self.default_state
+            self._reset_game()
         elif self.controller.should_simulate_game():
             if is_terminal_state(self.cur_state):
                 warn("* Current state is terminal; please reset game")
@@ -63,6 +57,7 @@ class Model:
     def _update(self):
         self.view.update(self.cur_state)
         self.view.draw_instructions(self.controller.INSTRUCTIONS)
+        self.view.draw_stats(self.stats)
         if not self.simulating_game:
             self.controller.update()
             self._handle_inputs()
