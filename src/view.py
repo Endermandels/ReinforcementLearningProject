@@ -31,6 +31,12 @@ class View:
         FONT_NAME = "comicsans"
         self.font_small = pygame.font.SysFont(FONT_NAME, 24)
         self.font_large = pygame.font.SysFont(FONT_NAME, 36)
+        
+        self._init_images()
+    
+    def _init_images(self):
+        self.title_img = self.font_large.render(self.TITLE, True, (255, 255, 255))
+        self.title_rect = self.title_img.get_rect(midtop=(self.WIDTH/2, 30))
     
     def _print_grid(self, grid: list[list[Tile]]):
         string = ""
@@ -95,13 +101,8 @@ class View:
                 self._draw_tile(tile, rect)
                 pygame.draw.rect(self.screen, (100, 75, 0), rect, 1)  # border
     
-    def _draw_title(self):
-        text = self.font_large.render(self.TITLE, True, (255, 255, 255))
-        text_rect = text.get_rect(midtop=(self.WIDTH/2, 30))
-        self.screen.blit(text, text_rect)
-    
     def _draw(self, state: State):
-        self._draw_title()
+        self.screen.blit(self.title_img, self.title_rect)
         self._draw_grid(state.grid)
     
     def _pygame_update(self, cur_state: State):
