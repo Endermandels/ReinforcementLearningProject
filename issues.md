@@ -15,6 +15,8 @@
 
 # Open
 
+13. Create config file
+14. Create pygame handler
 
 # Backlog
 
