@@ -1,4 +1,5 @@
-from toolbox import BColors, warn
+from config import *
+from toolbox import *
 from state import *
 
 PYGAME = False
@@ -131,13 +132,15 @@ class View:
                     string += BColors.BOLD
                     
                 if tile.occupying == TileSpace.OBSTACLE:
-                    string += BColors.YELLOW
+                    string += OBSTACLE_COL
                 elif tile.occupying == TileSpace.ROBOT:
-                    string += BColors.CYAN
+                    string += ROBOT_COL
                 elif tile.reward > 0:
-                    string += BColors.GREEN
+                    string += REWARD_COL
                 elif tile.reward < 0:
-                    string += BColors.RED
+                    string += PAIN_COL
+                elif tile.occupying == TileSpace.OPEN:
+                    string += OPEN_COL
                     
                 string += f" {tile.occupying.value} "
                 string += BColors.ENDC

@@ -12,10 +12,10 @@
 10. Create resizable grid
 11. Handle pygame inputs to run the game
 12. Display stats to pygame window
+13. Create config file
 
 # Open
 
-13. Create config file
 14. Create pygame handler
 
 # Backlog

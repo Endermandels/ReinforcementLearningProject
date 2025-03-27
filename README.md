@@ -43,6 +43,8 @@ Below is a description of what each colored character represents:
 
 On reaching a terminal state, the game stats will be displayed.
 
+NOTE: You can configure the colors of the characters from the config.py file.
+
 ## Pygame
 
 ### Pygame Controls
