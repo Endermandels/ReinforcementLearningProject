@@ -7,6 +7,7 @@ import agent_controller as ag_ctrl
 import agent as ag
 import agent_sensors as ag_ss
 import argparse
+from pygame_handler import PygameHandler, PYGAME
 
 class Model:
     """ Keeps track of the current game state and runs the main loop """
@@ -33,7 +34,6 @@ class Model:
             self.stats.num_actions += 1
         self.stats.num_iterations += 1
         if is_terminal_state(self.cur_state):
-            self.view.print_stats(self.stats)
             self.simulating_game = False
 
     def _reset_game(self):
@@ -55,9 +55,10 @@ class Model:
             self.simulating_game = True
 
     def _update(self):
-        self.view.update(self.cur_state)
-        self.view.draw_instructions(self.controller.INSTRUCTIONS)
-        self.view.draw_stats(self.stats)
+        self.view.update(self.cur_state, 
+                         self.stats, 
+                         self.controller.INSTRUCTIONS,
+                         self.simulating_game)
         if not self.simulating_game:
             self.controller.update()
             self._handle_inputs()
@@ -99,8 +100,15 @@ def main():
     agent_controller = ag_ctrl.AgentController()
     agent = ag.RandomAgent(agent_controller)
     agent_sensors = ag_ss.AgentSensors(agent)
-    view = vw.View(args.pygame)
-    controller = ctrl.Controller(args.pygame)
+    
+    if args.pygame and PYGAME:
+        pygame_handler = PygameHandler()
+        view = vw.PygameView(pygame_handler)
+        controller = ctrl.PygameController(pygame_handler)
+    else:
+        view = vw.TerminalView()
+        controller = ctrl.TerminalController()
+    
     model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
                   view, controller)
     model.run()

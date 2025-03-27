@@ -14,7 +14,7 @@ class BColors:
     ENDC = '\033[0m'
 
 # Terminal colors
-ROBOT_COL = BColors.ENDC
+ROBOT_COL = BColors.CYAN
 PAIN_COL = BColors.RED
 REWARD_COL = BColors.GREEN
 OBSTACLE_COL = BColors.YELLOW

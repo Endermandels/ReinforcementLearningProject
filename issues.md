@@ -13,10 +13,12 @@
 11. Handle pygame inputs to run the game
 12. Display stats to pygame window
 13. Create config file
+14. Create pygame handler
 
 # Open
 
-14. Create pygame handler
+15. Create sleep option to slow down simulation
+16. Create detached version (i.e. no Controller or View)
 
 # Backlog
 
