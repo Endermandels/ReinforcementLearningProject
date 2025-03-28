@@ -7,11 +7,10 @@ import agent_controller as ag_ctrl
 import agent as ag
 import agent_sensors as ag_ss
 import argparse
-from pygame_handler import PygameHandler, PYGAME
 
 class Model:
     """ Keeps track of the current game state and runs the main loop """
-    def __init__(self, agent: ag.Agent, agent_controller: ag_ctrl.AgentController, 
+    def __init__(self, agent: ag.Agent, agent_controller: ag_ctrl.AgentController,
                  agent_sensors: ag_ss.AgentSensors, default_state: State,
                  view: vw.View, controller: ctrl.Controller):
         self.view = view
@@ -21,7 +20,7 @@ class Model:
         self.agent = agent
         self.agent_controller = agent_controller
         self.agent_sensors = agent_sensors
-        
+
         self.simulating_game: bool = False # Whether the agent simulation is in progress
         self.stats = Stats()
 
@@ -55,8 +54,8 @@ class Model:
             self.simulating_game = True
 
     def _update(self):
-        self.view.update(self.cur_state, 
-                         self.stats, 
+        self.view.update(self.cur_state,
+                         self.stats,
                          self.controller.INSTRUCTIONS,
                          self.simulating_game)
         if not self.simulating_game:
@@ -73,21 +72,21 @@ class Model:
 
 TEST_GRID = [
     [
-        Tile(), 
-        Tile(), 
-        Tile(), 
+        Tile(),
+        Tile(),
+        Tile(),
         Tile(reward=1, occupying=TileSpace.ENERGY, is_terminal=True)
     ],
     [
-        Tile(), 
-        Tile(occupying=TileSpace.OBSTACLE), 
-        Tile(), 
+        Tile(),
+        Tile(occupying=TileSpace.OBSTACLE),
+        Tile(),
         Tile(reward=-1, occupying=TileSpace.TROLL, is_terminal=True)
     ],
     [
-        Tile(occupying=TileSpace.ROBOT), 
-        Tile(), 
-        Tile(), 
+        Tile(occupying=TileSpace.ROBOT),
+        Tile(),
+        Tile(),
         Tile()
     ],
 ]
@@ -96,19 +95,25 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pygame", action="store_true")
     args = parser.parse_args()
-    
+
     agent_controller = ag_ctrl.AgentController()
     agent = ag.RandomAgent(agent_controller)
     agent_sensors = ag_ss.AgentSensors(agent)
-    
-    if args.pygame and PYGAME:
-        pygame_handler = PygameHandler()
-        view = vw.PygameView(pygame_handler)
-        controller = ctrl.PygameController(pygame_handler)
-    else:
+
+    view = None
+    if args.pygame:
+        try:
+            import pygame_interface as pygi
+            pygame_handler = pygi.PygameHandler()
+            controller = pygi.PygameController(pygame_handler)
+            view = pygi.PygameView(pygame_handler)
+        except Exception as ex:
+            print(f"Failed to load the pygame interface! -- {ex}")
+
+    if view is None:
         view = vw.TerminalView()
         controller = ctrl.TerminalController()
-    
+
     model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
                   view, controller)
     model.run()

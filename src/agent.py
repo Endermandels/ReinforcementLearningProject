@@ -10,7 +10,7 @@ class Agent:
     """ AI model that takes in observations and computes the optimal acion """
     def __init__(self, controller: AgentController):
         self.controller = controller
-        
+
     def observe(self, observations):
         """ Receive observations from agent sensors """
         self._compute_action()
@@ -26,7 +26,7 @@ class Agent:
 class RandomAgent(Agent):
     def __init__(self, controller: AgentController):
         super().__init__(controller)
-        
+
     def _compute_action(self):
         """ Compute optimal action """
         action: mdl.Action = choice([mdl.Action.UP,
