@@ -9,6 +9,7 @@ class Controller:
         self.reset_game = False # Whether to reset the game state
         self.simulate_game = False # Whether to simulate a game from current state to terminal state
         self.INSTRUCTIONS = ""
+        self.simulation_wait_time = 0 # How long to wait inbetween steps while simulating the agent game
 
     def _handle_inputs(self):
         """ Set appropriate flags based on inputs """
@@ -41,10 +42,11 @@ class TerminalController(Controller):
     def __init__(self):
         super().__init__()
         self.INSTRUCTIONS = "What would you like to do?\n" \
-            "  1) quit\n" \
-            "  2) reset game\n" \
-            "  3) step through next agent action\n" \
-            "  4) simulate agent playing\n"
+                "  1) quit\n" \
+                "  2) reset game\n" \
+                "  3) step through next agent action\n" \
+                "  4) simulate agent playing\n" \
+                "  5) set simulation speed (steps/sec)\n"
     
     def _handle_inputs(self):
         # Parse user input
@@ -63,6 +65,16 @@ class TerminalController(Controller):
             self.step_input = True
         elif user_input == 4:
             self.simulate_game = True
+        elif user_input == 5:
+            user_input = input("Rate: ")
+            while True:
+                try:
+                    rate = float(user_input)
+                    break
+                except:
+                    warn("* Please input a valid float")
+                    user_input = input("Rate: ")
+            self.simulation_wait_time = 1 / rate if rate > 0 else 0
         else:
             warn(f"* Unknown option {user_input}; input a valid number")
 
