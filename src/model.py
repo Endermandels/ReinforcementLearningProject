@@ -1,5 +1,5 @@
 from __future__ import annotations
-from toolbox import warn
+from toolbox import warn, error
 from state import *
 import controller as ctrl
 import view as vw
@@ -91,6 +91,18 @@ TEST_GRID = [
     ],
 ]
 
+def init_view_and_controller(pygame_flag: bool) -> tuple[vw.View, ctrl.Controller]:
+    if pygame_flag:
+        try:
+            import pygame_interface as pygi
+            pygame_handler = pygi.PygameHandler()
+            return pygi.PygameView(pygame_handler), pygi.PygameController(pygame_handler)
+        except Exception as ex:
+            error(f"!!! Failed to load the pygame interface! -- {ex}")
+            warn("* Defaulting to terminal view")
+    return vw.TerminalView(), ctrl.TerminalController()
+    
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pygame", action="store_true")
@@ -100,19 +112,7 @@ def main():
     agent = ag.RandomAgent(agent_controller)
     agent_sensors = ag_ss.AgentSensors(agent)
 
-    view = None
-    if args.pygame:
-        try:
-            import pygame_interface as pygi
-            pygame_handler = pygi.PygameHandler()
-            controller = pygi.PygameController(pygame_handler)
-            view = pygi.PygameView(pygame_handler)
-        except Exception as ex:
-            print(f"Failed to load the pygame interface! -- {ex}")
-
-    if view is None:
-        view = vw.TerminalView()
-        controller = ctrl.TerminalController()
+    view, controller = init_view_and_controller(args.pygame)
 
     model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
                   view, controller)
