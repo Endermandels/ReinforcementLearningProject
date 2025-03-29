@@ -1,6 +1,7 @@
 from config import *
 from toolbox import *
 from state import *
+import controller as ctrl
 
 class View:
     """ Displays game state and user instructions """
@@ -18,17 +19,17 @@ class View:
     def _display_stats(self, stats: Stats):
         """ Display stats of the current run """
         pass
-
-    def _display_instructions(self, instructions: str):
+    
+    def _display_controller_prompts(self, controller: ctrl.Controller):
         """ Display instructions given by the Controller """
         pass
-
-    def update(self, cur_state: State, stats: Stats, instructions: str, simulating_game: bool):
+    
+    def update(self, cur_state: State, stats: Stats, controller: ctrl.Controller, simulating_game: bool):
         self.simulating_game = simulating_game
         self._display_header()
         self._display_state(cur_state)
         self._display_stats(stats)
-        self._display_instructions(instructions)
+        self._display_controller_prompts(controller)
 
 class TerminalView(View):
     def __init__(self):
@@ -69,10 +70,9 @@ class TerminalView(View):
         print(f"- actions / iterations: {round(act_per_iter, 3)}")
         print(f"- final reward: {stats.final_reward}")
         print()
-
-    def _display_instructions(self, instructions: str):
+    
+    def _display_controller_prompts(self, controller: ctrl.TerminalController):
         if self.simulating_game:
             return
-        print(instructions)
+        print(controller.INSTRUCTIONS)
         print(">> ", end="")
-

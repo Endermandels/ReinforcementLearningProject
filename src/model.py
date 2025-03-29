@@ -1,5 +1,6 @@
 from __future__ import annotations
 from toolbox import warn, error
+from time import sleep
 from state import *
 import controller as ctrl
 import view as vw
@@ -54,15 +55,16 @@ class Model:
             self.simulating_game = True
 
     def _update(self):
-        self.view.update(self.cur_state,
-                         self.stats,
-                         self.controller.INSTRUCTIONS,
+        self.view.update(self.cur_state, 
+                         self.stats, 
+                         self.controller,
                          self.simulating_game)
         if not self.simulating_game:
             self.controller.update()
             self._handle_inputs()
         else:
             self._step_agent()
+            sleep(self.controller.simulation_wait_time)
 
     def run(self):
         """ Run the game loop """

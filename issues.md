@@ -18,10 +18,11 @@
 # Open
 
 15. Create sleep option to slow down simulation
-16. Create detached version (i.e. no Controller or View)
+16. Show warning messages in pygame view
 
 # Backlog
 
+- Create detached version (i.e. no Controller or View)
 
 ## Class Structure
 * Model
