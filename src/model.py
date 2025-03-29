@@ -33,7 +33,7 @@ class Model:
         if prev_state != self.cur_state:
             self.stats.num_actions += 1
         self.stats.num_iterations += 1
-        if is_terminal_state(self.cur_state):
+        if self.cur_state.is_terminal:
             self.simulating_game = False
 
     def _reset_game(self):
@@ -42,14 +42,14 @@ class Model:
 
     def _handle_inputs(self):
         if self.controller.should_step():
-            if is_terminal_state(self.cur_state):
+            if self.cur_state.is_terminal:
                 warn("* Current state is terminal; please reset game")
                 return
             self._step_agent()
         elif self.controller.should_reset_game():
             self._reset_game()
         elif self.controller.should_simulate_game():
-            if is_terminal_state(self.cur_state):
+            if self.cur_state.is_terminal:
                 warn("* Current state is terminal; please reset game")
                 return
             self.simulating_game = True

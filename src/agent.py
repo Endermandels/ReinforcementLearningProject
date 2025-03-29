@@ -11,11 +11,11 @@ class Agent:
     def __init__(self, controller: AgentController):
         self.controller = controller
 
-    def observe(self, observations):
+    def observe(self, observations: dict):
         """ Receive observations from agent sensors """
-        self._compute_action()
+        self._compute_action(observations)
 
-    def _compute_action(self):
+    def _compute_action(self, observations: dict):
         """ Compute optimal action """
         self._act(mdl.Action.UP)
 
@@ -27,7 +27,7 @@ class RandomAgent(Agent):
     def __init__(self, controller: AgentController):
         super().__init__(controller)
 
-    def _compute_action(self):
+    def _compute_action(self, observations: dict):
         """ Compute optimal action """
         action: mdl.Action = choice([mdl.Action.UP,
                          mdl.Action.DOWN,

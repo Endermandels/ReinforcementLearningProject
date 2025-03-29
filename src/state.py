@@ -3,6 +3,8 @@ from toolbox import warn, error
 from typing import NamedTuple
 from enum import Enum
 
+MOVE_REWARD = -0.04
+
 class Stats:
     """ Stats collected while running the model """
     def __init__(self):
@@ -33,6 +35,8 @@ class Tile(NamedTuple):
 class State(NamedTuple):
     grid: list[list[Tile]]
     robot_pos: tuple[int, int] # x and y location of robot
+    reward: int = 0
+    is_terminal: bool = False
 
 def copy_grid(grid: list[list[Tile]]) -> list[list[Tile]]:
     copied_grid = []
@@ -86,7 +90,7 @@ def move_robot(state: State, direction: tuple[int, int]) -> State:
     grid[old_y][old_x] = Tile()
     grid[new_y][new_x] = Tile(reward=new_tile.reward, occupying=TileSpace.ROBOT, 
                               is_terminal=new_tile.is_terminal)
-    return State(grid, (new_x, new_y))
+    return State(grid, (new_x, new_y), new_tile.reward + MOVE_REWARD, new_tile.is_terminal)
     
 def handle_action(state: State, action: Action) -> State:
     """ Process the given action; Returns the new state or the same state on an illegal action """
@@ -94,8 +98,3 @@ def handle_action(state: State, action: Action) -> State:
         return state
     new_state = move_robot(state, action.value)
     return new_state
-
-def is_terminal_state(state: State) -> bool:
-    """ Returns whether this state is a terminal state """
-    robot_pos = state.robot_pos
-    return state.grid[robot_pos[1]][robot_pos[0]].is_terminal

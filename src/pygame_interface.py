@@ -36,7 +36,6 @@ class PygameController(Controller):
                         self.simulate_game = True
                     if event.key == pygame.K_5:
                         self.simulation_rate_input = "0"
-                        print("entering simulation rate input")
                 else:
                     if event.key == pygame.K_RETURN:
                         try:

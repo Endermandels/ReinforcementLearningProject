@@ -7,5 +7,5 @@ class AgentSensors:
         self.agent = agent
 
     def send_observations(self, state: State):
-        """ Create and send observations to Agent """
-        self.agent.observe(None)
+        """ Create and send observations to Agent via a dictionary """
+        self.agent.observe({'state': state})
