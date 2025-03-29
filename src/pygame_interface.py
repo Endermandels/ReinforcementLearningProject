@@ -8,10 +8,18 @@ from state import *
 class PygameEvent(Enum):
     QUIT = 0
     K_ESCAPE = 1
-    K_1 = 2
-    K_2 = 3
-    K_3 = 4
-    K_4 = 5
+    K_RETURN = 2
+    K_PERIOD = 3
+    K_1 = 4
+    K_2 = 5
+    K_3 = 6
+    K_4 = 7
+    K_5 = 8
+    K_6 = 9
+    K_7 = 10
+    K_8 = 11
+    K_9 = 12
+    K_0 = 13
 
 class PygameHandler:
     """ Custom API for common pygame functions """
@@ -51,6 +59,10 @@ class PygameHandler:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     events.append(PygameEvent.K_ESCAPE)
+                if event.key == pygame.K_RETURN:
+                    events.append(PygameEvent.K_RETURN)
+                if event.key == pygame.K_PERIOD:
+                    events.append(PygameEvent.K_PERIOD)
                 if event.key == pygame.K_1:
                     events.append(PygameEvent.K_1)
                 if event.key == pygame.K_2:
@@ -59,13 +71,25 @@ class PygameHandler:
                     events.append(PygameEvent.K_3)
                 if event.key == pygame.K_4:
                     events.append(PygameEvent.K_4)
+                if event.key == pygame.K_5:
+                    events.append(PygameEvent.K_5)
+                if event.key == pygame.K_6:
+                    events.append(PygameEvent.K_6)
+                if event.key == pygame.K_7:
+                    events.append(PygameEvent.K_7)
+                if event.key == pygame.K_8:
+                    events.append(PygameEvent.K_8)
+                if event.key == pygame.K_9:
+                    events.append(PygameEvent.K_9)
+                if event.key == pygame.K_0:
+                    events.append(PygameEvent.K_0)
         return events
 
 
 class PygameController(Controller):
     def __init__(self, pygame_handler: PygameHandler):
         super().__init__()
-        assert PYGAME and pygame_handler, "Pygame must be installed" \
+        assert pygame_handler, "Pygame must be installed" \
             " and PygameHandler must be initialized; or use TerminalController"
         self.pygame_handler = pygame_handler
         self.INSTRUCTIONS = "What would you like to do?\n" \
@@ -93,6 +117,7 @@ class PygameController(Controller):
                     self.simulate_game = True
                 if event == PygameEvent.K_5:
                     self.simulation_rate_input = "0"
+                    print("entering simulation rate input")
             else:
                 if event == PygameEvent.K_RETURN:
                     try:
@@ -217,7 +242,7 @@ class PygameView(View):
         self.screen.blit(final_reward_text, (self.LEFT_LINE_ALIGN, self.text_y_offset))
         self.text_y_offset += self.LINE_SPACING*2
     
-    def _display_controller_prompts(self, controller: ctrl.PygameController):
+    def _display_controller_prompts(self, controller: PygameController):
         lines = controller.INSTRUCTIONS.split('\n')
         for line in lines:
             text = self.font_small.render(line, True, (255, 255, 255))

@@ -116,7 +116,7 @@ def main():
 
     view, controller = init_view_and_controller(args.pygame)
 
-    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
+    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID, (0,2)),
                   view, controller)
     model.run()
 
