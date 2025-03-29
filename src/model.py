@@ -97,8 +97,8 @@ def init_view_and_controller(pygame_flag: bool) -> tuple[vw.View, ctrl.Controlle
     if pygame_flag:
         try:
             import pygame_interface as pygi
-            pygame_handler = pygi.PygameHandler()
-            return pygi.PygameView(pygame_handler), pygi.PygameController(pygame_handler)
+            pygi.init_pygame()
+            return pygi.PygameView(), pygi.PygameController()
         except Exception as ex:
             error(f"!!! Failed to load the pygame interface! -- {ex}")
             warn("* Defaulting to terminal view")
