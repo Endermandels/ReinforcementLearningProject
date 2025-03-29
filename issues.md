@@ -14,14 +14,15 @@
 12. Display stats to pygame window
 13. Create config file
 14. Create pygame handler
+15. Create sleep option to slow down simulation
 
 # Open
 
-15. Create sleep option to slow down simulation
-16. Show warning messages in pygame view
+16. Keep track of state rewards
 
 # Backlog
 
+- Show warning messages in pygame view
 - Create detached version (i.e. no Controller or View)
 
 ## Class Structure
