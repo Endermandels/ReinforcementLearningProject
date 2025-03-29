@@ -85,21 +85,60 @@ class PygameController(Controller):
             " and PygameHandler must be initialized; or use TerminalController"
         self.pygame_handler = pygame_handler
         self.INSTRUCTIONS = "What would you like to do?\n" \
-            "  1) quit\n" \
-            "  2) reset game\n" \
-            "  3) step through next agent action\n" \
-            "  4) simulate agent playing\n"
+                "  1) quit\n" \
+                "  2) reset game\n" \
+                "  3) step through next agent action\n" \
+                "  4) simulate agent playing\n" \
+                "  5) set simulation speed (steps/sec)\n"
+        self.simulation_rate_input = ""
         
     def _handle_inputs(self):
         for event in self.pygame_handler.get_events():
             if event == PygameEvent.QUIT:
                 self.quit_input = True
-            if event == PygameEvent.K_ESCAPE or event == PygameEvent.K_1:
+            if event == PygameEvent.K_ESCAPE:
                 self.quit_input = True
-            if event == PygameEvent.K_2:
-                self.reset_game = True
-            if event == PygameEvent.K_3:
-                self.step_input = True
-            if event == PygameEvent.K_4:
-                self.simulate_game = True
+            if not self.simulation_rate_input:
+                if event == PygameEvent.K_1:
+                    self.quit_input = True
+                if event == PygameEvent.K_2:
+                    self.reset_game = True
+                if event == PygameEvent.K_3:
+                    self.step_input = True
+                if event == PygameEvent.K_4:
+                    self.simulate_game = True
+                if event == PygameEvent.K_5:
+                    self.simulation_rate_input = "0"
+            else:
+                if event == PygameEvent.K_RETURN:
+                    try:
+                        rate = float(self.simulation_rate_input)
+                        self.simulation_wait_time = 1 / rate if rate > 0 else 0
+                        self.simulation_rate_input = ""
+                    except:
+                        warn("* Please input a valid float")
+                        self.simulation_rate_input = "0"
+                if event == PygameEvent.K_1:
+                    self.simulation_rate_input += "1"
+                if event == PygameEvent.K_2:
+                    self.simulation_rate_input += "2"
+                if event == PygameEvent.K_3:
+                    self.simulation_rate_input += "3"
+                if event == PygameEvent.K_4:
+                    self.simulation_rate_input += "4"
+                if event == PygameEvent.K_5:
+                    self.simulation_rate_input += "5"
+                if event == PygameEvent.K_6:
+                    self.simulation_rate_input += "6"
+                if event == PygameEvent.K_7:
+                    self.simulation_rate_input += "7"
+                if event == PygameEvent.K_8:
+                    self.simulation_rate_input += "8"
+                if event == PygameEvent.K_9:
+                    self.simulation_rate_input += "9"
+                if event == PygameEvent.K_0:
+                    self.simulation_rate_input += "0"
+                if event == PygameEvent.K_PERIOD:
+                    self.simulation_rate_input += "."
+                    
             

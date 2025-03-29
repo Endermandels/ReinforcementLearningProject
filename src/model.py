@@ -58,7 +58,7 @@ class Model:
     def _update(self):
         self.view.update(self.cur_state, 
                          self.stats, 
-                         self.controller.INSTRUCTIONS,
+                         self.controller,
                          self.simulating_game)
         if not self.simulating_game:
             self.controller.update()
@@ -111,7 +111,7 @@ def main():
         view = vw.TerminalView()
         controller = ctrl.TerminalController()
     
-    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID),
+    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID, (0, 2)),
                   view, controller)
     model.run()
 

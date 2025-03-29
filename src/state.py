@@ -32,6 +32,7 @@ class Tile(NamedTuple):
 
 class State(NamedTuple):
     grid: list[list[Tile]]
+    robot_pos: tuple[int, int] # x and y location of robot
 
 def copy_grid(grid: list[list[Tile]]) -> list[list[Tile]]:
     copied_grid = []
@@ -43,6 +44,7 @@ def copy_grid(grid: list[list[Tile]]) -> list[list[Tile]]:
     return copied_grid
 
 def get_robot_pos(grid: list[list[Tile]]) -> tuple[int, int]:
+    # NOTE: UNUSED
     for y, row in enumerate(grid):
         for x, tile in enumerate(row):
             if tile.occupying == TileSpace.ROBOT:
@@ -50,9 +52,9 @@ def get_robot_pos(grid: list[list[Tile]]) -> tuple[int, int]:
     error("!!! Robot not found")
     return -1, -1
 
-def illegal_action(state: State, action: Action) -> bool:
+def is_illegal_action(state: State, action: Action) -> bool:
     grid = state.grid
-    robot_pos = get_robot_pos(grid)
+    robot_pos = state.robot_pos
     new_x: int = robot_pos[0] + action.value[0]
     new_y: int = robot_pos[1] + action.value[1]
     if new_y >= len(grid):
@@ -72,28 +74,28 @@ def illegal_action(state: State, action: Action) -> bool:
         return True
     return False
 
-def move_robot(grid: list[list[Tile]], direction: tuple[int, int]):
-    """ Move robot's location on the grid to the new position """
-    robot_pos = get_robot_pos(grid)
+def move_robot(state: State, direction: tuple[int, int]) -> State:
+    """ Move robot's location on the grid to the new position; Return the new State """
+    grid = copy_grid(state.grid)
+    robot_pos = state.robot_pos
     old_x = robot_pos[0]
     old_y = robot_pos[1]
     new_x = old_x + direction[0]
     new_y = old_y + direction[1]
-    old_tile = grid[old_y][old_x]
     new_tile = grid[new_y][new_x] 
     grid[old_y][old_x] = Tile()
     grid[new_y][new_x] = Tile(reward=new_tile.reward, occupying=TileSpace.ROBOT, 
                               is_terminal=new_tile.is_terminal)
+    return State(grid, (new_x, new_y))
     
 def handle_action(state: State, action: Action) -> State:
     """ Process the given action; Returns the new state or the same state on an illegal action """
-    if illegal_action(state, action):
+    if is_illegal_action(state, action):
         return state
-    new_grid = copy_grid(state.grid)
-    move_robot(new_grid, action.value)
-    return State(grid=new_grid)
+    new_state = move_robot(state, action.value)
+    return new_state
 
 def is_terminal_state(state: State) -> bool:
     """ Returns whether this state is a terminal state """
-    robot_pos = get_robot_pos(state.grid)
+    robot_pos = state.robot_pos
     return state.grid[robot_pos[1]][robot_pos[0]].is_terminal
