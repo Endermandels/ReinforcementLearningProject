@@ -10,7 +10,7 @@ class Stats:
     def __init__(self):
         self.num_iterations: int  = 0 # Number of iterations (includes illegal actions)
         self.num_actions: int = 0 # Number of successful actions
-        self.final_reward: int = 0
+        self.reward: int = 0
 
 class Action(Enum):
     """ Available actions """

@@ -68,7 +68,7 @@ class TerminalView(View):
         print(f"- actions: {stats.num_actions}")
         act_per_iter = stats.num_actions / stats.num_iterations if stats.num_iterations > 0 else 0
         print(f"- actions / iterations: {round(act_per_iter, 3)}")
-        print(f"- final reward: {stats.final_reward}")
+        print(f"- reward: {stats.reward}")
         print()
     
     def _display_controller_prompts(self, controller: ctrl.TerminalController):

@@ -145,7 +145,7 @@ class PygameView(View):
         act_per_iter_text = self.font_small.render(f"actions / iterations: {round(act_per_iter, 3)}",
                                                    True, 
                                                    (255,255,255))
-        final_reward_text = self.font_small.render(f"final reward: {stats.final_reward}", 
+        final_reward_text = self.font_small.render(f"reward: {stats.reward}", 
                                                    True, 
                                                    (255,255,255))
         

@@ -28,17 +28,23 @@ class Model:
     def _step_agent(self):
         """ Allow agent to make an action """
         self.agent_sensors.send_observations(self.cur_state)
+        
         prev_state = self.cur_state
         self.cur_state = handle_action(self.cur_state, self.agent_controller.get_action())
         if prev_state != self.cur_state:
             self.stats.num_actions += 1
+        
         self.stats.num_iterations += 1
         if self.cur_state.is_terminal:
             self.simulating_game = False
+        
+        self.agent.receive_reward(self.cur_state.reward)
+        self.stats.reward = self.agent.reward
 
     def _reset_game(self):
         self.cur_state = self.default_state
         self.stats = Stats()
+        self.agent.new_game()
 
     def _handle_inputs(self):
         if self.controller.should_step():
@@ -116,7 +122,7 @@ def main():
 
     view, controller = init_view_and_controller(args.pygame)
 
-    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID, (0,2)),
+    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID, (0,2), MOVE_REWARD),
                   view, controller)
     model.run()
 
