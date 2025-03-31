@@ -15,10 +15,11 @@
 13. Create config file
 14. Create pygame handler
 15. Create sleep option to slow down simulation
+16. Keep track of state rewards
 
 # Open
 
-16. Keep track of state rewards
+17. Create RL agent
 
 # Backlog
 
