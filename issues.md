@@ -16,10 +16,11 @@
 14. Create pygame handler
 15. Create sleep option to slow down simulation
 16. Keep track of state rewards
+17. Create RL agent
 
 # Open
 
-17. Create RL agent
+18. Create training and test simulations
 
 # Backlog
 

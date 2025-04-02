@@ -3,9 +3,9 @@ from toolbox import warn, error
 from time import sleep
 from state import *
 from agent import *
-import controller as ctrl
-import view as vw
-import rl_agent as rl_ag
+from controller import Controller, TerminalController
+from view import View, TerminalView
+from rl_agent import RLAgent
 import argparse
 
 def noisy_action(action: Action) -> Action:
@@ -21,8 +21,8 @@ class Model:
     def __init__(self, 
                  default_state: State, 
                  agent: Agent,
-                 view: vw.View, 
-                 controller: ctrl.Controller):
+                 view: View, 
+                 controller: Controller):
         self.default_state = default_state
         self.cur_state = default_state
         self.agent = agent
@@ -112,11 +112,27 @@ TEST_STATE = State(
     (0, 2),
     (3, 1),
     (3, 0),
-    0,
+    MOVE_REWARD,
     False
 )
 
-def init_view_and_controller(pygame_flag: bool) -> tuple[vw.View, ctrl.Controller]:
+def init_q(state: State) -> dict[tuple[int, int], float]:
+    q = {}
+    for y in range(len(state.grid)):
+        for x in range(len(state.grid[0])):
+            for action in Action:
+                q[((x, y), action)] = get_tile_reward(state, (x, y))
+    return q
+
+def init_freq(state: State) -> dict[tuple[int, int], int]:
+    freq = {}
+    for y in range(len(state.grid)):
+        for x in range(len(state.grid[0])):
+            for action in Action:
+                freq[((x, y), action)] = 0
+    return freq
+
+def init_view_and_controller(pygame_flag: bool) -> tuple[View, Controller]:
     if pygame_flag:
         try:
             import pygame_interface as pygi
@@ -125,14 +141,13 @@ def init_view_and_controller(pygame_flag: bool) -> tuple[vw.View, ctrl.Controlle
         except Exception as ex:
             error(f"!!! Failed to load the pygame interface! -- {ex}")
             warn("* Defaulting to terminal view")
-    return vw.TerminalView(), ctrl.TerminalController()
-    
+    return TerminalView(), TerminalController()
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--pygame", action="store_true")
     args = parser.parse_args()
-    agent = RandomAgent()
+    agent = RLAgent(init_q(TEST_STATE), init_freq(TEST_STATE))
     view, controller = init_view_and_controller(args.pygame)
     model = Model(TEST_STATE, agent, view, controller)
     model.run()

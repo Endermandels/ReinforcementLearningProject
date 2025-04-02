@@ -73,7 +73,7 @@ def get_tile_reward(state: State, pos: tuple[int, int]) -> float:
         return -1
     if pos == state.energy_pos:
         return 1
-    return MOVE_REWARD
+    return 0
 
 def move_robot(state: State, direction: tuple[int, int]) -> State:
     """ Move robot's location on the grid to the new position; Return the new State """
@@ -84,11 +84,13 @@ def move_robot(state: State, direction: tuple[int, int]) -> State:
     new_y = old_y + direction[1]
     new_robot_pos = (new_x, new_y)
     
+    penalty = MOVE_REWARD if not is_terminal_tile(state, new_robot_pos) else 0
+    
     return State(state.grid, 
                  new_robot_pos,
                  state.troll_pos,
                  state.energy_pos,
-                 get_tile_reward(state, new_robot_pos),
+                 get_tile_reward(state, new_robot_pos) + penalty,
                  is_terminal_tile(state, new_robot_pos))
     
 def handle_action(state: State, action: Action) -> State:
