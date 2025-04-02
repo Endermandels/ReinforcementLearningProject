@@ -6,6 +6,7 @@ import controller as ctrl
 import view as vw
 import agent_controller as ag_ctrl
 import agent as ag
+import rl_agent as rl_ag
 import agent_sensors as ag_ss
 import argparse
 
@@ -36,9 +37,9 @@ class Model:
         
         self.stats.num_iterations += 1
         if self.cur_state.is_terminal:
+            self.agent_sensors.send_observations(self.cur_state)
             self.simulating_game = False
         
-        self.agent.receive_reward(self.cur_state.reward)
         self.stats.reward = self.agent.reward
 
     def _reset_game(self):
@@ -77,27 +78,34 @@ class Model:
         while not self.controller.should_quit():
             self._update()
 
-
-TEST_GRID = [
-    [
-        Tile(),
-        Tile(),
-        Tile(),
-        Tile(reward=1, occupying=TileSpace.ENERGY, is_terminal=True)
-    ],
-    [
-        Tile(),
-        Tile(occupying=TileSpace.OBSTACLE),
-        Tile(),
-        Tile(reward=-1, occupying=TileSpace.TROLL, is_terminal=True)
-    ],
-    [
-        Tile(occupying=TileSpace.ROBOT),
-        Tile(),
-        Tile(),
-        Tile()
-    ],
-]
+TEST_GRID = (
+    (
+        Tile.OPEN,
+        Tile.OPEN,
+        Tile.OPEN,
+        Tile.OPEN
+    ),
+    (
+        Tile.OPEN,
+        Tile.OBSTACLE,
+        Tile.OPEN,
+        Tile.OPEN
+    ),
+    (
+        Tile.OPEN,
+        Tile.OPEN,
+        Tile.OPEN,
+        Tile.OPEN
+    ),
+)
+TEST_STATE = State(
+    TEST_GRID, 
+    (0, 2),
+    (3, 1),
+    (3, 0),
+    0,
+    False
+)
 
 def init_view_and_controller(pygame_flag: bool) -> tuple[vw.View, ctrl.Controller]:
     if pygame_flag:
@@ -122,8 +130,7 @@ def main():
 
     view, controller = init_view_and_controller(args.pygame)
 
-    model = Model(agent, agent_controller, agent_sensors, State(TEST_GRID, (0,2), MOVE_REWARD),
-                  view, controller)
+    model = Model(agent, agent_controller, agent_sensors, TEST_STATE, view, controller)
     model.run()
 
 if __name__ == "__main__":

@@ -35,31 +35,28 @@ class TerminalView(View):
     def __init__(self):
         super().__init__()
 
-    def _print_grid(self, grid: list[list[Tile]]):
+    def _display_state(self, state: State):
         string = ""
-        for row in grid:
-            for tile in row:
-                if tile.is_terminal:
+        for y, row in enumerate(state.grid):
+            for x, tile in enumerate(row):
+                pos = (x, y)
+                if is_terminal_tile(state, pos):
                     string += BColors.BOLD
 
-                if tile.occupying == TileSpace.OBSTACLE:
-                    string += OBSTACLE_COL
-                elif tile.occupying == TileSpace.ROBOT:
-                    string += ROBOT_COL
-                elif tile.reward > 0:
-                    string += REWARD_COL
-                elif tile.reward < 0:
-                    string += PAIN_COL
-                elif tile.occupying == TileSpace.OPEN:
-                    string += OPEN_COL
+                if pos == state.robot_pos:
+                    string += f"{ROBOT_COL} {MovableObject.ROBOT} "
+                elif pos == state.energy_pos:
+                    string += f"{REWARD_COL} {MovableObject.ENERGY} "
+                elif pos == state.troll_pos:
+                    string += f"{PAIN_COL} {MovableObject.TROLL} "
+                elif tile == Tile.OBSTACLE:
+                    string += f"{OBSTACLE_COL} {tile.value} "
+                elif tile == Tile.OPEN:
+                    string += f"{OPEN_COL} {tile.value} "
 
-                string += f" {tile.occupying.value} "
                 string += BColors.ENDC
             string += "\n"
         print(string)
-
-    def _display_state(self, state: State):
-        self._print_grid(state.grid)
 
     def _display_stats(self, stats: Stats):
         if self.simulating_game:

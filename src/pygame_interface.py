@@ -93,36 +93,6 @@ class PygameView(View):
         self.title_img = self.font_large.render(self.TITLE, True, (255, 255, 255))
         self.title_rect = self.title_img.get_rect(midtop=(self.WIDTH/2, 30))
     
-    def _draw_tile(self, tile: Tile, rect):
-        if tile.occupying == TileSpace.OPEN:
-            pygame.draw.rect(self.screen, (25, 0, 50), rect)
-        elif tile.occupying == TileSpace.OBSTACLE:
-            pygame.draw.rect(self.screen, (200, 200, 0), rect)
-        elif tile.occupying == TileSpace.ENERGY:
-            pygame.draw.rect(self.screen, (0, 200, 0), rect)
-        elif tile.occupying == TileSpace.TROLL:
-            pygame.draw.rect(self.screen, (200, 0, 0), rect)
-        elif tile.occupying == TileSpace.ROBOT:
-            pygame.draw.rect(self.screen, (0, 200, 200), rect)    
-    
-    def _draw_grid(self, grid: list[list[Tile]]):
-        x_offset = self.WIDTH / 2 - (self.GRID_CELL_SIZE*len(grid[0])) / 2
-        y_offset = self.HEIGHT / 2 - (self.GRID_CELL_SIZE*len(grid)) / 2
-        
-        for y, row in enumerate(grid):
-            for x, tile in enumerate(row):
-                rect = pygame.Rect(x_offset + x * self.GRID_CELL_SIZE,
-                                                       y_offset + y * self.GRID_CELL_SIZE,
-                                                       self.GRID_CELL_SIZE, 
-                                                       self.GRID_CELL_SIZE)
-                self._draw_tile(tile, rect)
-                
-                # border
-                if tile.is_terminal:
-                    pygame.draw.rect(self.screen, (255, 255, 255), rect, 2)
-                else:
-                    pygame.draw.rect(self.screen, (100, 75, 0), rect, 2)  
-    
     def _display_header(self):
         # Update pygame stuff
         pygame.display.flip()
@@ -132,7 +102,33 @@ class PygameView(View):
         self.screen.blit(self.title_img, self.title_rect)
     
     def _display_state(self, state: State):
-        self._draw_grid(state.grid)
+        x_offset = self.WIDTH / 2 - (self.GRID_CELL_SIZE*len(state.grid[0])) / 2
+        y_offset = self.HEIGHT / 2 - (self.GRID_CELL_SIZE*len(state.grid)) / 2
+        
+        for y, row in enumerate(state.grid):
+            for x, tile in enumerate(row):
+                pos = (x, y)
+                rect = pygame.Rect(x_offset + x * self.GRID_CELL_SIZE,
+                                                       y_offset + y * self.GRID_CELL_SIZE,
+                                                       self.GRID_CELL_SIZE, 
+                                                       self.GRID_CELL_SIZE)
+                
+                if pos == state.robot_pos:
+                    pygame.draw.rect(self.screen, (0, 200, 200), rect)    
+                elif pos == state.troll_pos:
+                    pygame.draw.rect(self.screen, (200, 0, 0), rect)
+                elif pos == state.energy_pos:
+                    pygame.draw.rect(self.screen, (0, 200, 0), rect)
+                elif tile == Tile.OBSTACLE:
+                    pygame.draw.rect(self.screen, (200, 200, 0), rect)
+                elif tile == Tile.OPEN:
+                    pygame.draw.rect(self.screen, (25, 0, 50), rect)
+                    
+                # Terminal tile border
+                if is_terminal_tile(state, pos):
+                    pygame.draw.rect(self.screen, (255, 255, 255), rect, 2)
+                else:
+                    pygame.draw.rect(self.screen, (100, 75, 0), rect, 2)
     
     def _display_stats(self, stats: Stats):
         iter_text = self.font_small.render(f"iterations: {stats.num_iterations}", 

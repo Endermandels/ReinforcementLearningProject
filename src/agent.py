@@ -1,6 +1,5 @@
 from __future__ import annotations
-import model as mdl
-from state import State
+from state import Action
 from random import choice
 
 from typing import TYPE_CHECKING
@@ -15,14 +14,17 @@ class Agent:
 
     def observe(self, observations: dict):
         """ Receive observations from agent sensors """
+        # TODO: Make a sensed function wrapper
         self._compute_action(observations)
 
     def _compute_action(self, observations: dict):
         """ Compute optimal action """
-        self._act(mdl.Action.UP)
+        # TODO: Change to tick function
+        self._act(Action.UP)
 
-    def _act(self, action: mdl.Action):
+    def _act(self, action: Action):
         """ Send action to agent controller """
+        # TODO: Make a noisy function wrapper
         self.controller.receive_action(action)
     
     def receive_reward(self, reward):
@@ -39,8 +41,8 @@ class RandomAgent(Agent):
 
     def _compute_action(self, observations: dict):
         """ Compute optimal action """
-        action: mdl.Action = choice([mdl.Action.UP,
-                         mdl.Action.DOWN,
-                         mdl.Action.LEFT,
-                         mdl.Action.RIGHT,])
+        action: Action = choice([Action.UP,
+                         Action.DOWN,
+                         Action.LEFT,
+                         Action.RIGHT,])
         self._act(action)
