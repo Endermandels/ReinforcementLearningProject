@@ -10,7 +10,11 @@ class Agent:
     """ AI model that takes in observations and computes the optimal acion """
     def __init__(self):
         self.reward = 0 # Accumulated reward over a game
+        self.explore_rate: float = 0.3 # Explore 30% of the time
 
+    def set_exploration_rate(self, rate: float):
+        self.explore_rate = rate
+        
     def update(self, observations: Observations) -> Action:
         """ Compute and return optimal action based on observations """
         return Action.UP

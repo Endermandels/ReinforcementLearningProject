@@ -7,10 +7,38 @@ from controller import Controller, TerminalController
 from view import View, TerminalView
 from rl_agent import RLAgent
 import argparse
+from random import uniform
+
+def rotate_right(action: Action) -> Action:
+    warn("* rotating right")
+    if action == Action.RIGHT:
+        return Action.DOWN
+    if action == Action.LEFT:
+        return Action.UP
+    if action == Action.UP:
+        return Action.RIGHT
+    if action == Action.DOWN:
+        return Action.LEFT
+
+def rotate_left(action: Action) -> Action:
+    warn("* rotating left")
+    if action == Action.RIGHT:
+        return Action.UP
+    if action == Action.LEFT:
+        return Action.DOWN
+    if action == Action.UP:
+        return Action.LEFT
+    if action == Action.DOWN:
+        return Action.RIGHT
 
 def noisy_action(action: Action) -> Action:
     """ Returns possibly altered action """
-    return action
+    rnd = uniform(0, 1)
+    if rnd < 0.8:
+        return action
+    if rnd < 0.9:
+        return rotate_left(action)
+    return rotate_right(action)
 
 def sensed_observations(state: State) -> Observations:
     """ Returns possibly altered observations based on the state """
@@ -29,7 +57,6 @@ class Model:
         self.view = view
         self.controller = controller
 
-        self.simulating_game: bool = False # Whether the agent simulation is in progress
         self.stats = Stats()
 
     def _step_agent(self):
@@ -47,8 +74,8 @@ class Model:
         # Handle terminal state
         if self.cur_state.is_terminal:
             self.agent.update(sensed_observations(self.cur_state))
-            self.simulating_game = False
-        
+            self.controller.reduce_ngames()
+
         self.stats.reward = self.agent.reward
 
     def _reset_game(self):
@@ -64,23 +91,25 @@ class Model:
             self._step_agent()
         elif self.controller.should_reset_game():
             self._reset_game()
-        elif self.controller.should_simulate_game():
-            if self.cur_state.is_terminal:
-                warn("* Current state is terminal; please reset game")
-                return
-            self.simulating_game = True
 
     def _update(self):
         self.view.update(self.cur_state, 
                          self.stats, 
-                         self.controller,
-                         self.simulating_game)
-        if not self.simulating_game:
+                         self.controller)
+        if self.cur_state.is_terminal:
+            self._reset_game()
+        if not self.controller.should_simulate_game():
             self.controller.update()
             self._handle_inputs()
         else:
+            if self.controller.training:
+                self.agent.set_exploration_rate(0.3)
+            else:
+                self.agent.set_exploration_rate(0)
+
             self._step_agent()
-            sleep(self.controller.simulation_wait_time)
+            if not self.controller.training:
+                sleep(self.controller.simulation_wait_time)
 
     def run(self):
         """ Run the game loop """

@@ -6,13 +6,17 @@ class Controller:
         self.quit_input = False # Whether to quit the program
         self.step_input = False # Whether to step through the next agent action
         self.reset_game = False # Whether to reset the game state
-        self.simulate_game = False # Whether to simulate a game from current state to terminal state
+        self.ngames = 0 # How many games to play while simulating
+        self.training = True # When simulating (i.e. ngames > 0), determines whether there is any exploration
         self.INSTRUCTIONS = ""
         self.simulation_wait_time = 0 # How long to wait inbetween steps while simulating the agent game
 
     def _handle_inputs(self):
         """ Set appropriate flags based on inputs """
         pass
+
+    def reduce_ngames(self):
+        self.ngames -= 1
 
     def update(self):
         self._handle_inputs()
@@ -33,9 +37,7 @@ class Controller:
         return temp
 
     def should_simulate_game(self) -> bool:
-        temp = self.simulate_game
-        self.simulate_game = False
-        return temp
+        return self.ngames > 0
 
 class TerminalController(Controller):
     def __init__(self):
@@ -44,9 +46,10 @@ class TerminalController(Controller):
                 "  1) quit\n" \
                 "  2) reset game\n" \
                 "  3) step through next agent action\n" \
-                "  4) simulate agent playing\n" \
-                "  5) set simulation speed (steps/sec)\n"
-    
+                "  4) train agent (enter number of games)\n" \
+                "  5) test agent (enter number of games)\n" \
+                "  6) test speed (enter number of steps per second)\n"
+                
     def _handle_inputs(self):
         # Parse user input
         user_input = input()
@@ -63,8 +66,26 @@ class TerminalController(Controller):
         elif user_input == 3:
             self.step_input = True
         elif user_input == 4:
-            self.simulate_game = True
+            self.training = True
+            user_input = input("# Games: ")
+            while True:
+                try:
+                    self.ngames = int(user_input)
+                    break
+                except:
+                    warn("* Please input a valid float")
+                    user_input = input("# Games: ")
         elif user_input == 5:
+            self.training = False
+            user_input = input("# Games: ")
+            while True:
+                try:
+                    self.ngames = int(user_input)
+                    break
+                except:
+                    warn("* Please input a valid float")
+                    user_input = input("# Games: ")
+        elif user_input == 6:
             user_input = input("Rate: ")
             while True:
                 try:

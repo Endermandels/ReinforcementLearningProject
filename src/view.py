@@ -24,8 +24,8 @@ class View:
         """ Display instructions given by the Controller """
         pass
     
-    def update(self, cur_state: State, stats: Stats, controller: ctrl.Controller, simulating_game: bool):
-        self.simulating_game = simulating_game
+    def update(self, cur_state: State, stats: Stats, controller: ctrl.Controller):
+        self.simulating_game = controller.should_simulate_game()
         self._display_header()
         self._display_state(cur_state)
         self._display_stats(stats)
