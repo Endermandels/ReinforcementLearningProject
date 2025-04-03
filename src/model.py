@@ -96,12 +96,15 @@ class Model:
         self.view.update(self.cur_state, 
                          self.stats, 
                          self.controller)
-        if self.cur_state.is_terminal:
-            self._reset_game()
         if not self.controller.should_simulate_game():
             self.controller.update()
             self._handle_inputs()
+            if self.controller.should_simulate_game():
+                self._reset_game()
         else:
+            if self.cur_state.is_terminal:
+                self._reset_game()
+                
             if self.controller.training:
                 self.agent.set_exploration_rate(0.3)
             else:

@@ -14,9 +14,11 @@ class PygameController(Controller):
                 "  1) quit\n" \
                 "  2) reset game\n" \
                 "  3) step through next agent action\n" \
-                "  4) simulate agent playing\n" \
-                "  5) set simulation speed (steps/sec)\n"
-        self.simulation_rate_input = ""
+                "  4) train agent (enter number of games)\n" \
+                "  5) test agent (enter number of games)\n" \
+                "  6) test speed (enter number of steps per second)\n"
+        self.num_input = ""
+        self.num_input_key = 4
         
     def _handle_inputs(self):
         for event in pygame.event.get():
@@ -25,7 +27,7 @@ class PygameController(Controller):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.quit_input = True
-                if not self.simulation_rate_input:
+                if not self.num_input:
                     if event.key == pygame.K_1:
                         self.quit_input = True
                     if event.key == pygame.K_2:
@@ -33,42 +35,65 @@ class PygameController(Controller):
                     if event.key == pygame.K_3:
                         self.step_input = True
                     if event.key == pygame.K_4:
-                        self.simulate_game = True
+                        self.num_input = "0"
+                        self.num_input_key = 4
                     if event.key == pygame.K_5:
-                        self.simulation_rate_input = "0"
+                        self.num_input = "0"
+                        self.num_input_key = 5
+                    if event.key == pygame.K_6:
+                        self.num_input = "0"
+                        self.num_input_key = 6
                 else:
                     if event.key == pygame.K_RETURN:
-                        try:
-                            rate = float(self.simulation_rate_input)
-                            self.simulation_wait_time = 1 / rate if rate > 0 else 0
-                            self.simulation_rate_input = ""
-                        except:
-                            warn("* Please input a valid float")
-                            self.simulation_rate_input = "0"
+                        if self.num_input_key == 4:
+                            try:
+                                self.ngames = int(self.num_input)
+                                self.training = True
+                                self.num_input = ""
+                            except:
+                                warn("* Please input a valid int")
+                                self.num_input = "0"
+                        elif self.num_input_key == 5:
+                            try:
+                                self.ngames = int(self.num_input)
+                                self.training = False
+                                self.num_input = ""
+                            except:
+                                warn("* Please input a valid int")
+                                self.num_input = "0"
+                        elif self.num_input_key == 6:
+                            try:
+                                rate = float(self.num_input)
+                                self.simulation_wait_time = 1 / rate if rate > 0 else 0
+                                self.num_input = ""
+                            except:
+                                warn("* Please input a valid float")
+                                self.num_input = "0"
+                    if event.key == pygame.K_BACKSPACE:
+                        if len(self.num_input) > 1:
+                            self.num_input = self.num_input[:-1]
                     if event.key == pygame.K_1:
-                        self.simulation_rate_input += "1"
+                        self.num_input += "1"
                     if event.key == pygame.K_2:
-                        self.simulation_rate_input += "2"
+                        self.num_input += "2"
                     if event.key == pygame.K_3:
-                        self.simulation_rate_input += "3"
+                        self.num_input += "3"
                     if event.key == pygame.K_4:
-                        self.simulation_rate_input += "4"
+                        self.num_input += "4"
                     if event.key == pygame.K_5:
-                        self.simulation_rate_input += "5"
+                        self.num_input += "5"
                     if event.key == pygame.K_6:
-                        self.simulation_rate_input += "6"
+                        self.num_input += "6"
                     if event.key == pygame.K_7:
-                        self.simulation_rate_input += "7"
+                        self.num_input += "7"
                     if event.key == pygame.K_8:
-                        self.simulation_rate_input += "8"
+                        self.num_input += "8"
                     if event.key == pygame.K_9:
-                        self.simulation_rate_input += "9"
+                        self.num_input += "9"
                     if event.key == pygame.K_0:
-                        self.simulation_rate_input += "0"
+                        self.num_input += "0"
                     if event.key == pygame.K_PERIOD:
-                        self.simulation_rate_input += "."
-                    
-            
+                        self.num_input += "."
 
 class PygameView(View):
     def __init__(self):
@@ -162,9 +187,9 @@ class PygameView(View):
             self.screen.blit(text, (self.LEFT_LINE_ALIGN, self.text_y_offset))
             self.text_y_offset += self.LINE_SPACING
         
-        if controller.simulation_rate_input:
+        if controller.num_input:
             self.text_y_offset += self.LINE_SPACING
-            text = self.font_small.render(">> "+ controller.simulation_rate_input[1:], 
+            text = self.font_small.render(">> "+ controller.num_input[1:], 
                                           True,
                                           (255,255,255))
             self.screen.blit(text, (self.LEFT_LINE_ALIGN, self.text_y_offset))
