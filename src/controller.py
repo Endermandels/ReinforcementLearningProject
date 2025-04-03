@@ -45,10 +45,10 @@ class TerminalController(Controller):
         self.INSTRUCTIONS = "What would you like to do?\n" \
                 "  1) quit\n" \
                 "  2) reset game\n" \
-                "  3) step through next agent action\n" \
-                "  4) train agent (enter number of games)\n" \
-                "  5) test agent (enter number of games)\n" \
-                "  6) test speed (enter number of steps per second)\n"
+                "  3) step agent\n" \
+                "  4) train agent\n" \
+                "  5) test agent\n" \
+                "  6) test speed\n"
                 
     def _handle_inputs(self):
         # Parse user input

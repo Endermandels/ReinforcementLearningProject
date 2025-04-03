@@ -24,10 +24,10 @@ All terminal controls are listed after running model.py:
 
     1. quit - Quit the program
     2. reset game - Reset the game state to the default state
-    3. step through next agent action - Allow the agent to make one action
-    4. simulate agent playing - Allow the agent to make actions until a terminal state is reached
-
-NOTE: Must reset game manually after reaching a terminal state.
+    3. step agent - Allow the agent to make one action
+    4. train agent - Simulate a specified number of training games where the agent explores different moves
+    5. test agent - Simulate a specified number of testing games where the agent makes only the best moves
+    6. test speed - Set the testing simulation speed between moves (steps per second)
 
 ### Terminal View
 
@@ -51,12 +51,8 @@ NOTE: You can configure the colors of the characters from the config.py file.
 
 All pygame controls are listed after running model.py:
 
-    ESC/1 - Quit the program
-    2 - Reset the game state to the default state
-    3 - Step through next agent action
-    4 - Simulate agent playing the game
-    
-NOTE: Must reset game manually after reaching a terminal state.
+    ESC - Quit the program
+    The same options as the Terminal Controls
 
 ### Pygame View
 
